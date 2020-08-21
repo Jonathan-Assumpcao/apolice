@@ -1,7 +1,5 @@
 package com.seguradora.sistema.api.services.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -19,24 +17,18 @@ public class ApoliceServiceImpl implements ApoliceService {
 	private ApoliceRepository apoliceRepository;
 
 	@Override
-	public List<Apolice> listarTodas() {
+	public List<Apolice> listarTodas(){
 		return this.apoliceRepository.findAll();
 	}
 
 	@Override
 	public Apolice cadastrar(Apolice apolice) {
 		apolice.setNumero(this.gerarNumeroApolice().toString());
-		SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
-		Calendar data = Calendar.getInstance();
-		apolice.setDataVigencia(dataFormatada.format(data.getTime()));
-		data.set(Calendar.YEAR, data.get(Calendar.YEAR) + 1);
-		apolice.setDataFim(dataFormatada.format(data.getTime()));
-		
 		return this.apoliceRepository.save(apolice);
 	}
 
 	@Override
-	public Apolice atualizar(Apolice apolice) {
+	public Apolice atualizar(Apolice apolice){
 		return this.apoliceRepository.save(apolice);
 	}
 
@@ -46,13 +38,11 @@ public class ApoliceServiceImpl implements ApoliceService {
 	}
 
 	@Override
-	public Apolice buscarPorNumero(String numero) {
-		
+	public Apolice buscarPorNumero(String numero) throws NullPointerException {
 		try {
 			return this.apoliceRepository.findById(numero).get();
 		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new NullPointerException("Busca nao encotnrada");
 		}
 	}
 

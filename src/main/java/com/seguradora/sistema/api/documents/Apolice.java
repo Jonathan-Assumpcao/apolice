@@ -9,7 +9,6 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.seguradora.sistema.api.validation.Validacao;
 
 @Document
@@ -62,6 +61,7 @@ public class Apolice {
 		this.numero = numero;
 	}
 	
+	@NotEmpty(message="Data fim de contrato é obrigatório")
 	public String getDataVigencia() {
 		return dataVigencia;
 	}
@@ -70,6 +70,7 @@ public class Apolice {
 		this.dataVigencia = dataVigencia;
 	}
 	
+	@NotEmpty(message="Data do fim de contrato é obrigatório")
 	public String getDataFim() {
 		return dataFim;
 	}
@@ -78,7 +79,7 @@ public class Apolice {
 		this.dataFim = dataFim;
 	}
 	
-	@NotEmpty
+	@NotEmpty(message ="Favor informar placa do veiculo")
 	public String getPlaca() {
 		return placa;
 	}
@@ -87,11 +88,12 @@ public class Apolice {
 		this.placa = placa;
 	}
 	
-	@NotEmpty
+	@NotEmpty(message = "Valor da apolice é obrigatório")
 	public String getValorApolice() {
 		return valorApolice;
 	}
 	
+
 	public void setValorApolice(String valorApolice) {
 		this.valorApolice = valorApolice;
 	}
@@ -106,9 +108,9 @@ public class Apolice {
 			Date dataVigencia = Calendar.getInstance().getTime();
 			Date dataFim = dataFimF.parse(this.dataFim);
 			if(dataVigencia.compareTo(dataFim) < 0 ) {
-				this.diasRestantes = (dataFim.getTime() - dataVigencia.getTime()) / 86400000;
+				this.diasRestantes = 1+(dataFim.getTime() - dataVigencia.getTime()) / 86400000;
 			}else {
-				this.diasVencidos = (dataVigencia.getTime() - dataFim.getTime()) / 86400000;
+				this.diasVencidos = 1+(dataVigencia.getTime() - dataFim.getTime()) / 86400000;
 				this.vencida = true;
 			}
 		}catch(Exception e) {

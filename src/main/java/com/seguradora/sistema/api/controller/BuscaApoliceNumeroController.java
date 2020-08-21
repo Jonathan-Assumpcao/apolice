@@ -1,3 +1,4 @@
+
 package com.seguradora.sistema.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,12 @@ public class BuscaApoliceNumeroController {
 	
 	@GetMapping(path="/{numero}")
 	public ResponseEntity<Response<Apolice>> getPorNumero(@PathVariable String numero){
-		return ResponseEntity.ok(new Response<Apolice>(this.apoliceService.buscarPorNumero(numero)));
+		try {
+
+			return ResponseEntity.ok(new Response<Apolice>(this.apoliceService.buscarPorNumero(numero)));
+		}catch(Exception e) {
+			return ResponseEntity.badRequest().body(new Response<Apolice>(e.getMessage()));
+		}
 	}
 
 }
