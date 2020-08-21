@@ -21,17 +21,23 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public Cliente listarPorCPF(String cpf) {
-		return this.clienteRepository.findById(cpf).get();
+	public Cliente listarPorCPF(String cpf) throws NullPointerException{
+		try {
+			return this.clienteRepository.findById(cpf).get();
+		}catch(NullPointerException e) {
+			throw new NullPointerException("Nenhum item encontrado");
+		}
 	}
 
 	@Override
-	public Cliente cadastrar(Cliente cliente) {
+	public Cliente cadastrar(Cliente cliente){
 		return this.clienteRepository.save(cliente);
 	}
 
 	@Override
 	public Cliente atualizar(Cliente cliente) {
+		if(!this.clienteRepository.existsById(cliente.getCpf()))
+			return null;
 		return this.clienteRepository.save(cliente);
 	}
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.seguradora.sistema.api.documents.Apolice;
 import com.seguradora.sistema.api.response.Response;
 import com.seguradora.sistema.api.services.ApoliceService;
+import com.seguradora.sistema.api.validation.DataValidacao;
 import com.seguradora.sistema.api.validation.ResponseValidacao;
 
 @RestController
@@ -29,15 +30,23 @@ public class ApoliceController {
 	
 	@GetMapping
 	public ResponseEntity<Response<List<Apolice>>>listarTodas() {
-		return ResponseEntity.ok(new Response<List<Apolice>>(this.apoliceService.listarTodas()));
+		try {
+			return ResponseEntity.ok(new Response<List<Apolice>>(this.apoliceService.listarTodas()));
+		}catch(Exception e) {
+			return ResponseEntity.badRequest().body(new Response<List<Apolice>>(e.getMessage()));
+		}
 	}
 	
 	@PostMapping
 	public ResponseEntity<Response<Apolice>> cadastrar(@Valid @RequestBody Apolice apolice, BindingResult result){
+		String exp = "dd/MM/yyyy";
 		try {
 			apolice.validar(new ResponseValidacao(result));
+			apolice.validar(new DataValidacao(apolice.getDataVigencia(), exp));
+			apolice.validar(new DataValidacao(apolice.getDataFim(),exp));
 			return ResponseEntity.ok(new Response<Apolice>(this.apoliceService.cadastrar(apolice)));
 		}catch(Exception e) {
+		
 			return ResponseEntity.badRequest().body(new Response<Apolice>(e.getMessage()));
 		}
 	}
@@ -45,10 +54,15 @@ public class ApoliceController {
 	@PutMapping(path="/{numero}")
 	public ResponseEntity<Response<Apolice>> atualizar(@PathVariable String numero, 
 			@Valid @RequestBody Apolice apolice, BindingResult result){
+		String exp = "dd/MM/yyyy";
 		try {
 			apolice.validar(new ResponseValidacao(result));
+			apolice.validar(new DataValidacao(apolice.getDataVigencia(), exp));
+			apolice.validar(new DataValidacao(apolice.getDataFim(),exp));
 			
 			return ResponseEntity.ok(new Response<Apolice>(this.apoliceService.atualizar(apolice)));
+		}catch(NullPointerException e) {
+			return ResponseEntity.badRequest().body(new Response<Apolice>("Nenhuma apólice vinculada a este número"));
 		}catch(Exception e) {
 			return ResponseEntity.badRequest().body(new Response<Apolice>(e.getMessage()));
 		}

@@ -35,7 +35,11 @@ public class ClienteController {
 	
 	@GetMapping(path = "/{cpf}")
 	public ResponseEntity<Response<Cliente>> listarPorCPF(@PathVariable(name = "cpf") String cpf){
-		return ResponseEntity.ok(new Response<Cliente>(this.clienteService.listarPorCPF(cpf)));
+		try {
+			return ResponseEntity.ok(new Response<Cliente>(this.clienteService.listarPorCPF(cpf)));
+		}catch(Exception e) {
+			return ResponseEntity.badRequest().body(new Response<Cliente>(e.getMessage()));
+		}
 	}
 	
 	@PostMapping
@@ -55,8 +59,8 @@ public class ClienteController {
 		try {
 			cliente.setCpf(cpf);
 			return ResponseEntity.ok(new Response<Cliente>(this.clienteService.cadastrar(cliente)));
-		}catch(Exception e) {
-			return ResponseEntity.badRequest().body(new Response<Cliente>(e.getMessage()));
+		}catch(NullPointerException e) {
+			return ResponseEntity.badRequest().body(new Response<Cliente>("CPF nao vinculado a nenhum cliente"));
 		}
 	}
 	

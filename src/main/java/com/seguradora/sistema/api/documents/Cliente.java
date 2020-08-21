@@ -17,7 +17,7 @@ public class Cliente {
 	private String cidade;
 	private String uf;
 	
-	@NotEmpty
+	@NotEmpty(message="Unidade federativa nao pode estar vazio")
 	public String getUf() {
 		return uf;
 	}
@@ -25,7 +25,7 @@ public class Cliente {
 		this.uf = uf;
 	}
 	
-	@NotEmpty
+	@NotEmpty(message="Cidade nao pode ser vazio")
 	public String getCidade() {
 		return cidade;
 	}
@@ -33,7 +33,7 @@ public class Cliente {
 		this.cidade = cidade;
 	}
 	
-	@NotEmpty
+	@NotEmpty(message="Nome nao pode ser vazio")
 	public String getNome() {
 		return nome;
 	}
