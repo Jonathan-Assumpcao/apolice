@@ -1,2 +1,0 @@
-com/seguradora/sistema/api/SistemaApplicationTests.java
- com.seguradora.sistema.api.SistemaApplicationTests
